@@ -1,7 +1,8 @@
-/**
- * VoxelGeometry - Base
+/**                                                     
+ * █░█ █▀█ ▀▄▀ █▀▀ █░░ █▀▀ █▀▀ █▀█ █▀▄▀█ █▀▀ ▀█▀ █▀█ █▄█
+ * ▀▄▀ █▄█ █░█ ██▄ █▄▄ █▄█ ██▄ █▄█ █░▀░█ ██▄ ░█░ █▀▄ ░█░
  * 
- * Licensed under MIT
+ * https://github.com/KekOnTheWorld/VoxelGeometry/blob/master/LICENSE
  * 
  * (c) KekOnTheWorld 2022
  */
@@ -12,6 +13,12 @@ export const VOXEL_HEIGHT = 20;
 export const VOXEL2D_DEFAULT_WIDTH = 20;
 export const VOXEL2D_DEFAULT_HEIGHT = 20;
 
+/**
+ * Initializes a new Settings instance and
+ * processes all settings elements of the document
+ * 
+ * @returns { Settings }
+ */
 export function initSettings() {
     const settings = new Settings();
 
@@ -24,40 +31,54 @@ export class Setting {
     /** @type { string } */
     type;
     /** @type { ((value: any) => void)[] } */
-    subscribers = [];
+    #subscribers = [];
     /** @type { any } */
     value;
 
-    /** @param { string } type */
+    /**
+     * Construct a new setting
+     * 
+     * @param { string } type
+     */
     constructor(type) {
         this.type = type;
     }
 
     /**
+     * Subscribe to this Setting. Will execute subscriber
+     * once at first registration if execute is not set to false
+     * 
      * @param { (any) => void } subscriber 
+     * @param { boolean | undefined } execute
      */
-    subscribe(subscriber) {
-        this.subscribers.push(subscriber);
-        subscriber(this.value);
+    subscribe(subscriber, execute) {
+        this.#subscribers.push(subscriber);
+        if(execute !== false) subscriber(this.value);
+    }
+
+    /**
+     * Trigger a value change
+     * 
+     * @param { any } value
+     */
+    trigger(value) {
+        this.#subscribers.forEach(s => s(value));
+        this.value = value;
     }
 }
 
 export class Settings {
     /** @type { { [ key: string ]: (node: HTMLElement) => Setting } } */
-    static types = {
-        "SLIDER": this.handleSlider,
+    static #types = {
+        "SLIDER": this.#handleSlider,
     };
 
     /** @param { HTMLElement } node */
-    static handleSlider(node) {
+    static #handleSlider(node) {
         const setting = new Setting("slider");
 
         /** @param { InputEvent } e */
-        const handler = (e) => {
-            const _v = parseInt(e.target.value);
-            setting.subscribers.forEach(s => s(_v));
-            setting.value = _v;
-        };
+        const handler = (e) => setting.trigger(parseInt(e.target.value));
 
         const _min = parseInt(node.getAttribute("min") || 0),
               _max = parseInt(node.getAttribute("max") || 100),
@@ -84,26 +105,29 @@ export class Settings {
         return setting;
     }
 
-    #settings = {}; /** @type { { [key: string]: Setting } } */
+    /** @type { { [key: string]: Setting } } */
+    #settings = {};
 
     /**
+     * Process node and search for settings included (children)
+     * 
      * @param { HTMLElement } node 
      */
     process(node) {
         node.childNodes.forEach((child) => {
             if(child.nodeType !== 1) return;
-            const cb = Settings.types[child.nodeName];
+            const cb = Settings.#types[child.nodeName];
             if(cb) this.#settings[child.getAttribute("name")] = cb(child);
         })
     }
 
     /**
+     * Subscribe to a setting. Must be registered or else an Error may be thrown
      * 
      * @param { string } setting 
      * @param { (value: any) => void } subscriber 
      */
     subscribe(setting, subscriber) {
-        /** @type { Setting | undefined } */
         const _setting = this.#settings[setting];
         if(_setting) _setting.subscribe(subscriber);
         else throw new Error("Setting not registered");
@@ -111,6 +135,8 @@ export class Settings {
 }
 
 /**
+ * Init a new Voxel2D instance
+ * 
  * @param { HTMLCanvasElement | undefined | null } canvas
  * @param { number | undefined | null } width
  * @param { number | undefined | null } height
@@ -141,6 +167,8 @@ export class Voxel2D {
     size;
 
     /**
+     * Create a new Voxel instance
+     * 
      * @param { HTMLCanvasElement } canvas
      * @param { number } width
      * @param { number } height
@@ -154,6 +182,8 @@ export class Voxel2D {
     }
 
     /**
+     * Map all points to an individual value
+     * 
      * @param {(v: number, x: number, y: number, i: number) => number} cb 
      */
     map(cb) {
@@ -163,6 +193,8 @@ export class Voxel2D {
     }
 
     /**
+     * Iterate over all points
+     * 
      * @param {(v: number, x: number, y: number, i: number) => void} cb 
      */
     forEach(cb) {
@@ -171,22 +203,29 @@ export class Voxel2D {
     }
 
     /**
+     * Set Voxel at position
+     * 
      * @param { number } x 
      * @param { number } y 
      * @param { number } value 
      */
-    setBlock(x, y, value) {
+    set(x, y, value) {
         this.#fields[x + y * this.width] = value;
     }
 
     /**
+     * Set Voxel at index
+     * 
      * @param { number } i
      * @param { number } value 
      */
-    setBlockI(i, value) {
+    setI(i, value) {
         this.#fields[i] = value;
     }
 
+    /**
+     * Draw the Voxel array to the canvas
+     */
     draw() {
         this.#context.clearRect(0, 0, this.width * VOXEL_WIDTH, this.height * VOXEL_HEIGHT);
         this.forEach((v, x, y, i) => {
@@ -198,6 +237,12 @@ export class Voxel2D {
         })
     }
 
+    /**
+     * Rebase the dimensions of the Voxel array
+     * 
+     * @param { number } width 
+     * @param { number } height 
+     */
     rebase(width, height) {
         if(this.width === width && this.height === height) return;
 

@@ -1,3 +1,12 @@
+/**                                                     
+ * █░█ █▀█ ▀▄▀ █▀▀ █░░ █▀▀ █▀▀ █▀█ █▀▄▀█ █▀▀ ▀█▀ █▀█ █▄█
+ * ▀▄▀ █▄█ █░█ ██▄ █▄▄ █▄█ ██▄ █▄█ █░▀░█ ██▄ ░█░ █▀▄ ░█░
+ * 
+ * https://github.com/KekOnTheWorld/VoxelGeometry/blob/master/LICENSE
+ * 
+ * (c) KekOnTheWorld 2022
+ */
+
 import { init2D, initSettings } from "./base.js";
 
 const settings = initSettings();
