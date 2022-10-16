@@ -1,21 +1,23 @@
 import { init2D, initSettings } from "./base.js";
 
 const settings = initSettings();
+const voxel2D = init2D();
 
-const canvas = document.getElementById("canvas");
-const voxel2D = init2D(canvas);
-
+// Update on setting change
 settings.subscribe("radius", (radius) => {
+    // Calculate screen dimensions
     const width = radius * 2 + 1,
           height = radius * 2 + 1;
 
-    
     // Resize voxel2D
     voxel2D.rebase(width, height);
 
+    // Draw circle
     voxel2D.map((_, x, y) => {
         const _x = x - radius, _y = y - radius;
         return Math.round(Math.sqrt(_x*_x + _y*_y)) === radius;
     });
+
+    // Draw to canvas
     voxel2D.draw();
 });

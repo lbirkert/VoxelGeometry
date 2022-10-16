@@ -111,16 +111,19 @@ export class Settings {
 }
 
 /**
- * @param { HTMLCanvasElement } canvas
+ * @param { HTMLCanvasElement | undefined | null } canvas
  * @param { number | undefined | null } width
  * @param { number | undefined | null } height
  * @returns { Voxel2D }
  */
 export function init2D(canvas, width, height) {
     const _width = typeof width === "number" ? width : VOXEL2D_DEFAULT_WIDTH,
-          _height = typeof height === "number" ? height : VOXEL2D_DEFAULT_HEIGHT;
+          _height = typeof height === "number" ? height : VOXEL2D_DEFAULT_HEIGHT,
+          _canvas = typeof canvas === "object" ? canvas : document.querySelector("canvas");
 
-    return new Voxel2D(canvas, _width, _height);
+    if(!_canvas) throw new Error("No canvas has been provided or found on the page!");
+
+    return new Voxel2D(_canvas, _width, _height);
 }
 
 export class Voxel2D {
