@@ -1,0 +1,53 @@
+@import url(https://rsms.me/inter/inter.css);
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: rgb(14, 14, 14);
+    color: white;
+}
+
+settings::before {
+    content: "Settings";
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+settings {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    background-color: rgb(22, 22, 22);
+    border-radius: 10px;
+    padding: 20px;
+    color: white
+}
+
+slider {
+    display: flex;
+    column-gap: 10px;
+}
+
+canvas {
+    width: 100%;
+    border-radius: 10px;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    row-gap: 30px;
+    padding: 30px 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+a {
+    color: rgb(117, 255, 255);
+}

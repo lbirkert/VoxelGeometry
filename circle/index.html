@@ -5,11 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VoxelGeometry | Circle</title>
+    <link rel="stylesheet" href="../css/base.css">
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-    <p>This is a circle</p>
-    <a href="../js/circle.js">View source</a>
-    <script src="../js/circle.js" type="module"></script>
+    <main>
+        <canvas id="canvas"></canvas>
+        <settings>
+            <p>Radius</p>
+            <slider name="radius" min="2" max="80" value="10"/>
+        </settings>
+        <p>This is a circle. Try to change the settings</p>
+        <a href="https://github.com/KekOnTheWorld/VoxelGeometry/blob/master/js/circle.js">View source</a>
+        <script src="../js/circle.js" type="module"></script>
+    </main>
 </body>
 </html>

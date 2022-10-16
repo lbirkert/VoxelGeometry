@@ -1,13 +1,21 @@
-import { init2D } from "./base.js";
+import { init2D, initSettings } from "./base.js";
 
-const radius = 10;
-const width = radius * 2 + 1,
-      height = radius * 2 + 1;
+const settings = initSettings();
 
-const voxel2D = init2D(document.getElementById("canvas"), width, height);
+const canvas = document.getElementById("canvas");
+const voxel2D = init2D(canvas);
 
-voxel2D.map((_, x, y) => {
-    const _x = x - radius, _y = y - radius;
-    return Math.round(Math.sqrt(_x*_x + _y*_y)) !== radius;
+settings.subscribe("radius", (radius) => {
+    const width = radius * 2 + 1,
+          height = radius * 2 + 1;
+
+    
+    // Resize voxel2D
+    voxel2D.rebase(width, height);
+
+    voxel2D.map((_, x, y) => {
+        const _x = x - radius, _y = y - radius;
+        return Math.round(Math.sqrt(_x*_x + _y*_y)) === radius;
+    });
+    voxel2D.draw();
 });
-voxel2D.draw();
